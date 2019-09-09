@@ -9,6 +9,8 @@ import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.w3c.dom.Document;
 import org.xml.sax.XMLFilter;
 import org.xml.sax.XMLReader;
@@ -120,6 +122,17 @@ public class SVGExport {
             transcoder.transcode(in, out);
         } catch (TranscoderException ex) {
             throw new SVGExportException(ex);
+        }
+        return this;
+    }
+
+    public SVGExport setWidthAndHeight(int width, int height, Format format) {
+        if (format.getContentType().equals(Format.JPEG.getContentType())) {
+            transcoder.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(width));
+            transcoder.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(height));
+        } else if (format.getContentType().equals(Format.PNG.getContentType())) {
+            transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, new Float(width));
+            transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, new Float(height));
         }
         return this;
     }
